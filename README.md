@@ -1,94 +1,162 @@
+
+
+---
+
 # 🌤️ Voice Weather Assistant
 
-A real-time voice-activated weather assistant built with **Next.js**, **LiveKit**, and **Google Gemini**.
+A fast, lightweight **voice-activated weather assistant** built using **Next.js**, **Google Gemini 2.5**, and **OpenWeatherMap**.
+Speak naturally → The assistant fetches real-time weather data → Gemini generates a natural reply → The browser speaks it back to you.
+
+---
 
 ## 🚀 How It Works
 
-1.  **Voice Input**: The user speaks into the microphone on the Next.js client.
-2.  **Real-time Streaming**: Audio is streamed via WebSockets (LiveKit) to a backend agent.
-3.  **AI Processing**:
-    *   **Gemini 2.0 Flash** processes the audio input directly (Multimodal).
-    *   It understands the intent (e.g., "What's the weather in Mumbai?").
-4.  **Tool Calling**: The agent calls the OpenWeatherMap API to fetch real-time data.
-5.  **Voice Response**: The agent generates a natural voice response and streams it back to the client.
+This app uses a simple but powerful pipeline:
+
+### **1. Voice Input**
+
+The user taps the mic →
+Browser’s **Web Speech API** converts **voice → text** instantly.
+
+### **2. Send Query to Next.js API**
+
+Your backend receives the recognized text at:
+
+```
+/api/agent
+```
+
+### **3. Gemini Processing**
+
+Gemini 2.5 Flash:
+
+* Understands your question
+* Extracts the city name
+* Determines user intent (weather today, tomorrow, rain, temp, etc.)
+
+### **4. Real-Time Weather API**
+
+Backend calls **OpenWeatherMap** and retrieves:
+
+* Temperature
+* Condition
+* Humidity
+* Wind
+* Forecast
+
+### **5. Merge Weather + AI**
+
+Gemini generates a **smart, friendly response** using the fresh data.
+
+### **6. Voice Output**
+
+Browser’s **SpeechSynthesis** API converts text → voice.
+The UI also displays a **typing animation** of the response.
+
+---
 
 ## 🛠️ Tech Stack
 
-*   **Frontend**: Next.js 15, TailwindCSS, LiveKit React Components
-*   **Backend Agent**: Node.js, LiveKit Agents Framework
-*   **AI Model**: Google Gemini 2.0 Flash (Multimodal)
-*   **Weather Data**: OpenWeatherMap API
-*   **Real-time Infra**: LiveKit Cloud
+### **Frontend**
 
-## 🏗️ Architecture
+* Next.js 15
+* TailwindCSS
+* Web Speech API (speech → text)
+* SpeechSynthesis API (text → speech)
+* Typing animation UI
 
-```mermaid
-graph LR
-    Client[Next.js App] <-->|WebSocket| LiveKit[LiveKit Cloud]
-    LiveKit <-->|WebSocket| Agent[Node.js Agent]
-    Agent <-->|API| Gemini[Google Gemini]
-    Agent <-->|API| Weather[OpenWeatherMap]
-```
+### **Backend (API Route)**
 
-## 🏁 Getting Started
+* Google Gemini 2.5 Flash (`@google/genai`)
+* OpenWeatherMap API
+* Next.js Server Actions / API Routes
 
-### Prerequisites
+---
 
-*   **LiveKit Cloud** account (for real-time audio/video)
-*   **Google AI Studio** key (for Gemini)
-*   **OpenWeatherMap** key (for weather data)
 
-### 1. Clone the Repository
+
+---
+
+## 📦 Installation
+
+### 1. Clone Repo
 
 ```bash
 git clone https://github.com/harshkandera/voice-weather.git
 cd voice-weather
 ```
 
-### 2. Environment Setup
-
-Create a `.env.local` file in the client directory:
-
-```bash
-LIVEKIT_API_KEY=your_key
-LIVEKIT_API_SECRET=your_secret
-LIVEKIT_URL=your_livekit_url
-```
-
-### 3. Run the Client
+### 2. Install Dependencies
 
 ```bash
 npm install
+```
+
+### 3. Setup Environment Variables
+
+Create `.env.local`:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+OPENWEATHER_API_KEY=your_weather_api_key
+```
+
+### 4. Run Locally
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open:
 
-### 4. Run the Agent (Server)
+👉 **[http://localhost:3000](http://localhost:3000)**
 
-*Note: The server code is located in the `server/` directory.*
+---
 
-Create a `.env` file in the server directory:
+## 🔍 Example Queries
+
+Try speaking:
+
+* **“What’s the weather in Mumbai right now?”**
+* **“Will it rain in Pune tomorrow?”**
+* **“Tell me humidity in Delhi today.”**
+* **“What’s the temperature in Jaipur?”**
+
+---
+
+## ✨ UI Features
+
+* 🎤 **One-tap microphone**
+* 🎧 **Voice response**
+* ⌨️ **Smooth typing animation**
+* 🌦️ **Smart weather detection**
+* ⚡ **Fast response using Gemini 2.5 Flash**
+* 🔄 **No backend server or LiveKit required**
+
+---
+
+## 📁 Project Structure (Simplified)
 
 ```bash
-LIVEKIT_URL=your_livekit_url
-LIVEKIT_API_KEY=your_key
-LIVEKIT_API_SECRET=your_secret
-OPENWEATHER_API_KEY=your_weather_key
-GEMINI_API_KEY=your_gemini_key
+client/
+│── app/
+│   ├── page.tsx       # Main UI with mic + typing animation
+│   └── api/agent/route.ts  # Weather + Gemini API backend
+│── public/
+│── styles/
+│── package.json
+│── README.md
 ```
 
-Then run the worker:
+---
 
-```bash
-cd server
-pnpm install
-pnpm dev
-```
+## 🧠 Future Enhancements (Optional)
 
-## 🌟 Features
+* 🌍 Support Hindi & Marathi voice commands
+* 🌧️ 5-Day forecast integration
+* 📱 Convert to PWA (Voice Weather App)
+* 🗺️ Auto-detect city using geolocation
+* 🎨 Add animated weather icons
 
-*   **Hands-free Interaction**: Just speak to ask about the weather.
-*   **Real-time Latency**: Ultra-low latency response using Gemini 2.0 Flash.
-*   **Live Transcriptions**: See what the agent hears and says.
-*   **Visual Feedback**: Dynamic UI states for listening/speaking.
+
+
