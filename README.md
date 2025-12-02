@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌤️ Voice Weather Assistant
 
-## Getting Started
+A real-time voice-activated weather assistant built with **Next.js**, **LiveKit**, and **Google Gemini**.
 
-First, run the development server:
+## 🚀 How It Works
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1.  **Voice Input**: The user speaks into the microphone on the Next.js client.
+2.  **Real-time Streaming**: Audio is streamed via WebSockets (LiveKit) to a backend agent.
+3.  **AI Processing**:
+    *   **Gemini 2.0 Flash** processes the audio input directly (Multimodal).
+    *   It understands the intent (e.g., "What's the weather in Mumbai?").
+4.  **Tool Calling**: The agent calls the OpenWeatherMap API to fetch real-time data.
+5.  **Voice Response**: The agent generates a natural voice response and streams it back to the client.
+
+## 🛠️ Tech Stack
+
+*   **Frontend**: Next.js 15, TailwindCSS, LiveKit React Components
+*   **Backend Agent**: Node.js, LiveKit Agents Framework
+*   **AI Model**: Google Gemini 2.0 Flash (Multimodal)
+*   **Weather Data**: OpenWeatherMap API
+*   **Real-time Infra**: LiveKit Cloud
+
+## 🏗️ Architecture
+
+```mermaid
+graph LR
+    Client[Next.js App] <-->|WebSocket| LiveKit[LiveKit Cloud]
+    LiveKit <-->|WebSocket| Agent[Node.js Agent]
+    Agent <-->|API| Gemini[Google Gemini]
+    Agent <-->|API| Weather[OpenWeatherMap]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏁 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+*   **LiveKit Cloud** account (for real-time audio/video)
+*   **Google AI Studio** key (for Gemini)
+*   **OpenWeatherMap** key (for weather data)
 
-## Learn More
+### 1. Clone the Repository
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+git clone https://github.com/harshkandera/voice-weather.git
+cd voice-weather
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Environment Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create a `.env.local` file in the client directory:
 
-## Deploy on Vercel
+```bash
+LIVEKIT_API_KEY=your_key
+LIVEKIT_API_SECRET=your_secret
+LIVEKIT_URL=your_livekit_url
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Run the Client
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### 4. Run the Agent (Server)
+
+*Note: The server code is located in the `server/` directory.*
+
+Create a `.env` file in the server directory:
+
+```bash
+LIVEKIT_URL=your_livekit_url
+LIVEKIT_API_KEY=your_key
+LIVEKIT_API_SECRET=your_secret
+OPENWEATHER_API_KEY=your_weather_key
+GEMINI_API_KEY=your_gemini_key
+```
+
+Then run the worker:
+
+```bash
+cd server
+pnpm install
+pnpm dev
+```
+
+## 🌟 Features
+
+*   **Hands-free Interaction**: Just speak to ask about the weather.
+*   **Real-time Latency**: Ultra-low latency response using Gemini 2.0 Flash.
+*   **Live Transcriptions**: See what the agent hears and says.
+*   **Visual Feedback**: Dynamic UI states for listening/speaking.
